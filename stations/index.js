@@ -13,7 +13,7 @@ exports.handler = async (event, context, callback) => {
     connection.connect();
 
 
-    let [results, buffer] = await connection.query('show tables');
+    let [results, buffer] = await connection.query('CALL get_all_stations()');
     console.log(JSON.stringify(results));
     let response = createResponse(results);
     console.log(response);
