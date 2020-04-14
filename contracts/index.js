@@ -15,5 +15,16 @@ exports.handler = async (event, context, callback) => {
 
     let [results, buffer] = await connection.query('show tables');
     console.log(JSON.stringify(results));
-    return results;
+    return createResponse(results);
 };
+
+function createResponse(results) {
+    return {
+        "isBase64Encoded": true,
+        "statusCode": 200,
+        "headers": { "Content-Type": "application/json" },
+        "body": {
+            "results": results
+        }
+    }
+}
