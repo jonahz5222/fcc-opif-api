@@ -1,7 +1,10 @@
 const mysql = require('mysql2/promise');
 
 
-exports.handler = async (event, context, callback) => {
+exports.handler = async (event, context) => {
+    console.log("logging added");
+    console.log(event);
+    console.log(context);
 
     var connection = await mysql.createConnection({
         host: process.env.host,
@@ -13,20 +16,25 @@ exports.handler = async (event, context, callback) => {
     connection.connect();
 
 
-    let [results, buffer] = await connection.query('CALL get_all_stations()');
-    console.log(JSON.stringify(results));
-    let response = createResponse(results);
-    console.log(response);
-    return response;
+    if (event.queryStringParameters && event.queryStringParameters["id"]) {
+        let id = event.queryStringParameters["id"]
+        console.log(id)
+        let [results, buffer] = await connection.query(`CALL get_station_by_station_id(${id})`);
+        console.log(JSON.stringify(results));
+        let response = createResponse(results);
+        return response;
+    } else {
+        let [results, buffer] = await connection.query('CALL get_all_stations()');
+        console.log(JSON.stringify(results));
+        let response = createResponse(results);
+        return response;
+    }
+    
 };
 
 function createResponse(results) {
     return {
-        "isBase64Encoded": true,
-            "statusCode": 200,
-                "headers": { "Content-Type": "application/json" },
-        "body": {
-            "results": results
-        }
+        "statusCode": 200,
+        "body": JSON.stringify(results[0])
     }
 }

@@ -12,19 +12,31 @@ exports.handler = async (event, context, callback) => {
 
     connection.connect();
 
-
-    let [results, buffer] = await connection.query('show tables');
-    console.log(JSON.stringify(results));
-    return createResponse(results);
+    if (event.queryStringParameters && event.queryStringParameters["committee-id"] && event.queryStringParameters["buyer-id"]) {
+        let committeeID = event.queryStringParameters["committee-id"]
+        let buyerID = event.queryStringParameters["buyer-id"]
+        console.log(committeeID)
+        let [results, buffer] = await connection.query(`CALL get_committee_by_committee_and_buyer_id(${committeeID},${buyerID})`);
+        console.log(JSON.stringify(results));
+        let response = createResponse(results);
+        return response;
+    } else if (event.queryStringParameters && event.queryStringParameters["committee-id"]) {
+        let committeeID = event.queryStringParameters["committee-id"]
+        console.log(committeeID)
+        let [results, buffer] = await connection.query(`CALL get_committee_by_committee_id(${committeeID})`);
+        console.log(JSON.stringify(results));
+        let response = createResponse(results);
+        return response;
+    } else {
+        let [results, buffer] = await connection.query('CALL get_all_committees()');
+        console.log(JSON.stringify(results));
+        return createResponse(results);
+    }
 };
 
 function createResponse(results) {
     return {
-        "isBase64Encoded": true,
         "statusCode": 200,
-        "headers": { "Content-Type": "application/json" },
-        "body": {
-            "results": results
-        }
+        "body": JSON.stringify(results[0])
     }
 }
