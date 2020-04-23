@@ -15,14 +15,14 @@ exports.handler = async (event, context, callback) => {
     if (event.queryStringParameters && event.queryStringParameters["buyer-id"]) {
         let buyerID = event.queryStringParameters["buyer-id"]
         console.log(committeeID)
-        let [results, buffer] = await connection.query(`CALL get_committee_by_committee_and_buyer_id(${buyerID})`);
+        let [results, buffer] = await connection.query(`CALL get_committee_by_committee_and_buyer_id("${buyerID}")`);
         console.log(JSON.stringify(results));
         let response = createResponse(results);
         return response;
     } else if (event.queryStringParameters && event.queryStringParameters["committee-id"]) {
         let committeeID = event.queryStringParameters["committee-id"]
         console.log(committeeID)
-        let [results, buffer] = await connection.query(`CALL get_committee_by_committee_id(${committeeID})`);
+        let [results, buffer] = await connection.query(`CALL get_committee_by_committee_id("${committeeID}")`);
         console.log(JSON.stringify(results));
         let response = createResponse(results);
         return response;
