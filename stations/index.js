@@ -31,6 +31,7 @@ exports.handler = async (event, context) => {
         let response = createResponse(results);
         return response;
     }
+    else {
         let [results, buffer] = await connection.query('CALL get_all_stations()');
         console.log(JSON.stringify(results));
         let response = createResponse(results);
