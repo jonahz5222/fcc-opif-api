@@ -21,7 +21,7 @@ exports.handler = async (event, context) => {
         console.log(id)
         let [results, buffer] = await connection.query(`CALL get_station_by_station_id("${id}")`);
         console.log(JSON.stringify(results));
-        let response = createResponse(results);
+        let response = createResponse(results[0]);
         return response;
     } else if (event.queryStringParameters && event.queryStringParameters["market"]) {
         let market = event.queryStringParameters["market"]
