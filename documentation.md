@@ -42,5 +42,6 @@ Returns all stations
 | Parameter Name|Return                                                                                            |
 |-----------------|--------------------------------------------------------------------------------------------------|
 | `id`            | Station matching given id.|
+| `market`        | All stations with matching market.|
 
 

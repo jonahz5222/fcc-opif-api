@@ -23,7 +23,15 @@ exports.handler = async (event, context) => {
         console.log(JSON.stringify(results));
         let response = createResponse(results);
         return response;
-    } else {
+    } else if (event.queryStringParameters && event.queryStringParameters["market"]) {
+        let market = event.queryStringParameters["market"]
+        console.log(market)
+        let [results, buffer] = await connection.query(`CALL get_stations_by_market("${market}")`);
+        console.log(JSON.stringify(results));
+        let response = createResponse(results);
+        return response;
+    }
+    else {
         let [results, buffer] = await connection.query('CALL get_all_stations()');
         console.log(JSON.stringify(results));
         let response = createResponse(results);
