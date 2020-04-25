@@ -18,6 +18,7 @@ exports.handler = async (event, context, callback) => {
         let [results, buffer] = await connection.query(`CALL get_contract_by_contract_id("${id}")`);
         console.log(JSON.stringify(results));
         let response = createResponse(results);
+        return response;
     } else if (event.queryStringParameters && event.queryStringParameters["committee-id"] && event.queryStringParameters["buyer-id"]) {
         let committeeID = event.queryStringParameters["committee-id"]
         let buyerID = event.queryStringParameters["buyer-id"]
@@ -39,6 +40,7 @@ exports.handler = async (event, context, callback) => {
         let [results, buffer] = await connection.query(`CALL get_contracts_within_range("${range}")`);
         console.log(JSON.stringify(results));
         let response = createResponse(results);
+        return response;
     } else {
         let [results, buffer] = await connection.query('CALL get_all_contracts()');
         console.log(JSON.stringify(results));
