@@ -13,32 +13,32 @@ exports.handler = async (event, context, callback) => {
     connection.connect();
 
     if (event.queryStringParameters && event.queryStringParameters["id"]) {
-        let id = event.queryStringParameters["id"]
+        let id = connection.escape(event.queryStringParameters["id"])
         console.log(id)
-        let [results, buffer] = await connection.query(`CALL get_contract_by_contract_id("${id}")`);
+        let [results, buffer] = await connection.query(`CALL get_contract_by_contract_id(`+id+`)`);
         console.log(JSON.stringify(results));
         
         let response = createResponse(results, true);
         return response;
     } else if (event.queryStringParameters && event.queryStringParameters["committee-id"] && event.queryStringParameters["buyer-id"]) {
-        let committeeID = event.queryStringParameters["committee-id"]
-        let buyerID = event.queryStringParameters["buyer-id"]
+        let committeeID = connection.escape(event.queryStringParameters["committee-id"])
+        let buyerID = connection.escape(event.queryStringParameters["buyer-id"])
         console.log(committeeID)
-        let [results, buffer] = await connection.query(`CALL get_contracts_by_committee_and_buyer_id("${committeeID}","${buyerID}")`);
+        let [results, buffer] = await connection.query(`CALL get_contracts_by_committee_and_buyer_id(`+committeeID+`,`+buyerID+`)`);
         console.log(JSON.stringify(results));
         let response = createResponse(results);
         return response;
     } else if (event.queryStringParameters && event.queryStringParameters["market"]) {
-        let market = event.queryStringParameters["market"]
+        let market = connection.escape(event.queryStringParameters["market"])
         console.log(market)
-        let [results, buffer] = await connection.query(`CALL get_contracts_by_market("${market}")`);
+        let [results, buffer] = await connection.query(`CALL get_contracts_by_market(`+market+`)`);
         console.log(JSON.stringify(results));
         let response = createResponse(results);
         return response;
     } else if (event.queryStringParameters && event.queryStringParameters["range"]) {
-        let range = event.queryStringParameters["range"]
+        let range = connection.escape(event.queryStringParameters["range"])
         console.log(range)
-        let [results, buffer] = await connection.query(`CALL get_contracts_within_range("${range}")`);
+        let [results, buffer] = await connection.query(`CALL get_contracts_within_range(`+range+`)`);
         console.log(JSON.stringify(results));
         let response = createResponse(results);
         return response;

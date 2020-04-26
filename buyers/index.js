@@ -13,9 +13,9 @@ exports.handler = async (event, context, callback) => {
     connection.connect();
 
     if (event.queryStringParameters && event.queryStringParameters["id"]) {
-        let id = event.queryStringParameters["id"]
+        let id = connection.escape(event.queryStringParameters["id"])
         console.log(id)
-        let [results, buffer] = await connection.query(`CALL get_buyer_by_buyer_id("${id}")`);
+        let [results, buffer] = await connection.query(`CALL get_buyer_by_buyer_id(`+id+`)`);
         console.log(JSON.stringify(results));
         let response = createResponse(results, true);
         return response;
