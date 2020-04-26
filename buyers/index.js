@@ -17,7 +17,7 @@ exports.handler = async (event, context, callback) => {
         console.log(id)
         let [results, buffer] = await connection.query(`CALL get_buyer_by_buyer_id("${id}")`);
         console.log(JSON.stringify(results));
-        let response = createResponse(results[0]);
+        let response = createResponse(results, true);
         return response;
     } else {
         let [results, buffer] = await connection.query('CALL get_all_buyers()');
@@ -26,7 +26,20 @@ exports.handler = async (event, context, callback) => {
     }
 };
 
-function createResponse(results) {
+function createResponse(results, isSingle) {
+    if (results[0].length === 0) {
+        return {
+            "statusCode": 404,
+            "body": "No object found"
+        }
+    }
+
+    if (isSingle) {
+        return {
+            "statusCode": 200,
+            "body": JSON.stringify(results[0][0])
+        }
+    }
     return {
         "statusCode": 200,
         "body": JSON.stringify(results[0])

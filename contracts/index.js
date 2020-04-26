@@ -17,7 +17,8 @@ exports.handler = async (event, context, callback) => {
         console.log(id)
         let [results, buffer] = await connection.query(`CALL get_contract_by_contract_id("${id}")`);
         console.log(JSON.stringify(results));
-        let response = createResponse(results);
+        
+        let response = createResponse(results, true);
         return response;
     } else if (event.queryStringParameters && event.queryStringParameters["committee-id"] && event.queryStringParameters["buyer-id"]) {
         let committeeID = event.queryStringParameters["committee-id"]
@@ -48,7 +49,21 @@ exports.handler = async (event, context, callback) => {
     }
 };
 
-function createResponse(results) {
+function createResponse(results, isSingle) {
+    if (results[0].length === 0) {
+        return {
+            "statusCode": 404,
+            "body": "No object found"
+        }
+    }
+
+    if (isSingle) {
+        return {
+            "statusCode": 200,
+            "body": JSON.stringify(results[0][0])
+        }
+    }
+
     return {
         "statusCode": 200,
         "body": JSON.stringify(results[0])

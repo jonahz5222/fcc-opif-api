@@ -21,7 +21,7 @@ exports.handler = async (event, context) => {
         console.log(id)
         let [results, buffer] = await connection.query(`CALL get_station_by_station_id("${id}")`);
         console.log(JSON.stringify(results));
-        let response = createResponse(results[0]);
+        let response = createResponse(results, true);
         return response;
     } else if (event.queryStringParameters && event.queryStringParameters["market"]) {
         let market = event.queryStringParameters["market"]
@@ -40,7 +40,21 @@ exports.handler = async (event, context) => {
     
 };
 
-function createResponse(results) {
+function createResponse(results, isSingle) {
+    if (results[0].length === 0) {
+        return {
+            "statusCode": 404,
+            "body": "No object found"
+        }
+    }
+
+    if (isSingle) {
+        return {
+            "statusCode": 200,
+            "body": JSON.stringify(results[0][0])
+        }
+    }
+
     return {
         "statusCode": 200,
         "body": JSON.stringify(results[0])
