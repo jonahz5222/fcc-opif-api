@@ -12,19 +12,23 @@ exports.handler = async (event, context, callback) => {
 
     connection.connect();
 
-    if (event.queryStringParameters && event.queryStringParameters["id"]) {
-        let id = connection.escape(event.queryStringParameters["id"])
-        console.log(id)
-        let [results, buffer] = await connection.query(`CALL get_contract_by_contract_id(`+id+`)`);
-        console.log(JSON.stringify(results));
-        
-        let response = createResponse(results, true);
-        return response;
-    } else if (event.queryStringParameters && event.queryStringParameters["committee-id"] && event.queryStringParameters["buyer-id"]) {
+    if (event.queryStringParameters && event.queryStringParameters["committee-id"] && event.queryStringParameters["buyer-id"]) {
         let committeeID = connection.escape(event.queryStringParameters["committee-id"])
         let buyerID = connection.escape(event.queryStringParameters["buyer-id"])
         console.log(committeeID)
         let [results, buffer] = await connection.query(`CALL get_contracts_by_committee_and_buyer_id(`+committeeID+`,`+buyerID+`)`);
+        console.log(JSON.stringify(results));
+        let response = createResponse(results);
+        return response;
+    } else if (event.queryStringParameters && event.queryStringParameters["committee-id"]) {
+        let committeeID = connection.escape(event.queryStringParameters["committee-id"])
+        let [results, buffer] = await connection.query(`CALL get_contracts_by_committee_id(` + committeeID + `)`);
+        console.log(JSON.stringify(results));
+        let response = createResponse(results);
+        return response;
+    } else if (event.queryStringParameters && event.queryStringParameters["buyer-id"]) {
+        let buyerID = connection.escape(event.queryStringParameters["buyer-id"])
+        let [results, buffer] = await connection.query(`CALL get_contracts_by_buyer_id(` + buyerID + `)`);
         console.log(JSON.stringify(results));
         let response = createResponse(results);
         return response;
@@ -41,6 +45,14 @@ exports.handler = async (event, context, callback) => {
         let [results, buffer] = await connection.query(`CALL get_contracts_within_range(`+range+`)`);
         console.log(JSON.stringify(results));
         let response = createResponse(results);
+        return response;
+    } else if (event.queryStringParameters && event.queryStringParameters["id"]) {
+        let id = connection.escape(event.queryStringParameters["id"])
+        console.log(id)
+        let [results, buffer] = await connection.query(`CALL get_contract_by_contract_id(` + id + `)`);
+        console.log(JSON.stringify(results));
+
+        let response = createResponse(results, true);
         return response;
     } else {
         let [results, buffer] = await connection.query('CALL get_all_contracts()');
