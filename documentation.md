@@ -8,8 +8,8 @@ Returns all contracts
 | Parameter Name|Return                                                                                            |
 |-----------------|--------------------------------------------------------------------------------------------------|
 | `id`            | Contract matching given id.|
-| `committee-id`  | Used in conjunction with `buyer-id`, returns all contracts with matching committee and buyer.|
-| `buyer-id`      | Used in conjunction with `committee-id`, returns all contracts with matching committee and buyer. |
+| `committee-id`  | All contracts with matching committee. Can be paired with `buyer-id`.|
+| `buyer-id`      | All contracts with matching buyer. Can be paired with `committee-id`.|
 | `market`        | All contracts with matching market.|
 | `range`         | All contracts within given range.|
 ### `/buyers`
